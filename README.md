@@ -12,24 +12,17 @@ BlueBoat’s two thrusters push the surface boat forward when their thrusts add 
 
 $(x,y,\psi)$ gives position and heading. The body velocities are forward speed $u$, sideways speed $v$, and yaw rate $r$. I use this simulated state and a known wall to design the controllers and test the fault.
 
-## 3. What exactly are my two errors?
+## 3. Two Errors
 
-- **Distance error** is $e_d = d - d^*$. The gap $d$ is the shortest distance from the boat’s position to the wall, and $d^*$ is my target gap. Positive means too far away.
-- **Heading error** is $e_\psi = \operatorname{wrap}(\psi - \psi_{\mathrm{face}})$. Wrapping gives the shortest signed angle from the desired direction to the bow. Counterclockwise is positive when viewed from above.
+- **Distance error** is the shortest distance from the boat’s position to the wall. Positive means too far away.
+- **Heading error** is the shortest signed angle from the desired direction to the bow. Counterclockwise is positive when viewed from above.
 
-**How do I know $\psi_{\mathrm{face}}$?** I choose the wall and approach side. If the wall is at $x=0$ and I approach from $x<0$, I face it by pointing along $+x$, perpendicular to the wall, so $\psi_{\mathrm{face}}=0$. At any point along $x=-d^*$, facing $+x$ satisfies both goals.
+**How do I know $\psi_{\mathrm{face}}$?** I choose the wall and approach side. If the wall is at $x=0$ and I approach from $x<0$, I face it by pointing along $+x$, perpendicular to the wall, so $\psi_{\mathrm{face}}=0$. At any point along $x=-d^*$.
 
-## 4. Why do sine and cosine appear?
 
-$$
-\dot e_d = -u\cos(e_\psi) + v\sin(e_\psi), \qquad \dot e_\psi = r
-$$
+## Lyapunov candidate
 
-Picture the wall on the right. Point straight at it and all forward speed closes the gap, so $\dot e_d=-u$. Angle the bow slightly left and only the cosine component of $u$ closes the gap. Positive $v$ points 90° left of the bow, toward port. Its projection uses sine and opens the gap in this example. Since the wall is fixed, heading error changes at the yaw rate.
-
-## 5. How do my lecture examples become a Lyapunov candidate?
-
-“The boat can pass through the correct distance while it is still moving toward the wall.” As in the spring example, I need both displacement and speed.
+“The boat can pass through the correct distance while it is still moving toward the wall.” As in the spring example from the lecture, I need both displacement and speed.
 
 $$
 V_d = \tfrac12 k_d e_d^2 + \tfrac12 \dot e_d^2
@@ -41,13 +34,13 @@ $$
 V_\psi = k_\psi(1-\cos e_\psi) + \tfrac12 r^2
 $$
 
-The term $1-\cos e_\psi$ is zero when aligned, including after a full turn. Its slope is $\sin e_\psi$, which suggests a restoring turn in the opposite direction. The weight $w$ sets heading’s share of the candidate.
+The term $1-\cos e_\psi$ is zero when aligned, including after a full turn. The weight $w$ sets heading’s share of the candidate.
 
 $$
 V = V_d + w V_\psi, \qquad k_d,k_\psi,w > 0
 $$
 
-## 6. How would I test the controller and the fault?
+## Controller Testing 
 
 With **input–output feedback linearization**, I’ll use the boat model to choose forward force and yaw torque so each error behaves like a damped system. A simpler **proportional–derivative (PD) controller** will request force and torque directly from the same errors and their rates.
 
@@ -70,11 +63,3 @@ Both controllers will get the same starting pose and velocity, target, motor lim
 - **Path.** I’ll plot the top-down boat path with the wall and the target-gap line.
 - **Accuracy and recovery.** I’ll plot both errors over time with the fault instant marked and compare the post-fault RMS error for each. I’ll time recovery from the fault until both errors stay within my proposed tolerances (5 cm and 5°) for the rest of the run. If a controller never recovers, I’ll report that explicitly.
 - **Thrust demand.** I’ll plot commanded and delivered thrust for each motor and compare peak absolute commanded thrust between controllers.
-
-## Current progress and next steps
-
-I have the simulator, the error definitions, and a Lyapunov candidate. Next I’ll derive the controllers, check the healthy case, and run the paired fault tests.
-
-## Sources and contributions
-
-My notebook sketches supplied the wall geometry and fault idea. The spring and pendulum examples came from course material, and the boat dynamics came from the simulator linked in section 2. AI helped explain and organize the draft.
