@@ -1,18 +1,18 @@
 # CORAL — BlueBoat Wall Inspection With a Weakened Thruster
 
-## 1. What am I trying to find out?
+## Goal
 
 **When one BlueBoat thruster loses effectiveness, how does the choice of controller affect inspection accuracy, recovery time, and required thrust?**
 
 I’ll have the boat approach a straight virtual wall, stop at a chosen gap, and keep its bow facing the wall.
 
-## 2. What does the simulator already give me?
+## Simulator
 
 BlueBoat’s two thrusters push the surface boat forward when their thrusts add and turn it when their thrusts differ. Neither points sideways, but the hull can drift sideways.
 
 $(x,y,\psi)$ gives position and heading. The body velocities are forward speed $u$, sideways speed $v$, and yaw rate $r$. I use this simulated state and a known wall to design the controllers and test the fault.
 
-## 3. Two Errors
+## Two Errors
 
 - **Distance error** is the shortest distance from the boat’s position to the wall. Positive means too far away.
 - **Heading error** is the shortest signed angle from the desired direction to the bow. Counterclockwise is positive when viewed from above.
@@ -50,7 +50,7 @@ I’ll inject the fault after the simulator splits the force and torque requests
 
 **Fault-rule illustration.** If both motors are asked for 5 N and $\alpha=0.5$, port will deliver 2.5 N and starboard will deliver 5 N. Forward push will fall from 10 N to 7.5 N, and the imbalance will create an unintended turn.
 
-## 7. What evidence will answer my question?
+## What evidence will answer my question?
 
 | Port effectiveness | Starts I’ll test with both controllers |
 | --- | --- |
