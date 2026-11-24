@@ -8,9 +8,9 @@ I’ll have the boat approach a straight virtual wall, stop at a chosen gap, and
 
 ## 2. What does the simulator already give me?
 
-BlueBoat’s two thrusters push the surface boat forward when their thrusts add and turn it when their thrusts differ. Neither points sideways, but the hull can drift sideways. The model includes inertia and drag, with provisional simulation values for both. [BlueBoat simulator README](https://github.com/Llong112/uvms-simulator_coral/blob/lance/blueboat/README.md) · [Planar dynamics model](https://github.com/Llong112/uvms-simulator_coral/blob/lance/blueboat/scripts/generate_blueboat_dynamics.py)
+BlueBoat’s two thrusters push the surface boat forward when their thrusts add and turn it when their thrusts differ. Neither points sideways, but the hull can drift sideways.
 
-The planar pose $(x,y,\psi)$ gives position and heading. The body velocities are forward speed $u$, sideways speed $v$, and yaw rate $r$. I’ll use this simulated state and a known wall to design the controllers and test the fault.
+$(x,y,\psi)$ gives position and heading. The body velocities are forward speed $u$, sideways speed $v$, and yaw rate $r$. I use this simulated state and a known wall to design the controllers and test the fault.
 
 ## 3. What exactly are my two errors?
 
