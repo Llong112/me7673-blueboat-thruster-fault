@@ -1,0 +1,1 @@
+# me7673-blueboat-thruster-fault
